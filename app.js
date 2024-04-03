@@ -37,6 +37,13 @@ const getForecastWeatherByName = async (city) => {
   const json = await response.json();
   return json;
 };
+const getForecastWeatherByCoordinate = async (lat, lon) => {
+  const url = `${BASE_URL}/forecast?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`;
+  console.log(url);
+  const response = await fetch(url);
+  const json = await response.json();
+  return json;
+};
 
 const renderCurrentWeather = (data) => {
   // console.log(data);
@@ -61,6 +68,7 @@ const getWeekDay = (data) => {
   return DAYS[new Date(data * 1000).getDay()];
 };
 const renderForecastWeather = (data) => {
+  forecastContainer.innerHTML = "";
   data = data.list.filter((obj) => obj.dt_txt.endsWith("12:00:00"));
   console.log("data", data);
   data.forEach((i) => {
@@ -93,9 +101,12 @@ const searchHandler = async () => {
 const positionCallback = async (position) => {
   const { latitude, longitude } = position.coords;
   const currentData = await getCurrentWeatherByCoordinate(latitude, longitude);
-  console.log(latitude, latitude);
-  console.log(currentData);
   renderCurrentWeather(currentData);
+  const forecastData = await getForecastWeatherByCoordinate(
+    latitude,
+    longitude
+  );
+  renderForecastWeather(forecastData);
 };
 const errorCallback = (error) => {
   console.log(error.message);
