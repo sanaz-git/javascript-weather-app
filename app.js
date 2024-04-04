@@ -1,15 +1,6 @@
 import getWeatherData from "./utils/httpReq.js";
 import { removeModal, showModal } from "./utils/modal.js";
-
-const DAYS = [
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-  "Sunday",
-];
+import { getWeekDay } from "./utils/customDate.js";
 
 const searchInput = document.querySelector("input");
 const searchButton = document.querySelector("button");
@@ -19,7 +10,6 @@ const locationIcon = document.getElementById("location");
 const modalButton = document.getElementById("modal-button");
 
 const renderCurrentWeather = (data) => {
-  // console.log(data);
   if (!data) return;
   const weatherJSx = `
   <h1>${data.name}, ${data.sys.country}</h1>
@@ -38,9 +28,6 @@ const renderCurrentWeather = (data) => {
   weatherContainer.innerHTML = weatherJSx;
 };
 
-const getWeekDay = (data) => {
-  return DAYS[new Date(data * 1000).getDay()];
-};
 const renderForecastWeather = (data) => {
   if (!data) return;
   forecastContainer.innerHTML = "";
@@ -91,6 +78,14 @@ const locationHandler = () => {
   }
 };
 
+const initHandler = async () => {
+  const currentData = await getWeatherData("current", "tehran");
+  renderCurrentWeather(currentData);
+  const forecastData = await getWeatherData("forecast", "tehran");
+  renderForecastWeather(forecastData);
+};
+
 searchButton.addEventListener("click", searchHandler);
 locationIcon.addEventListener("click", locationHandler);
 modalButton.addEventListener("click", removeModal);
+document.addEventListener("DOMContentLoaded", initHandler);

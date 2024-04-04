@@ -22,7 +22,7 @@ const getWeatherData = async (type, data) => {
       break;
 
     default:
-      ul = `${BASE_URL}/forecast?q=tehran&appid=${API_KEY}&units=metric`;
+      ulr = `${BASE_URL}/forecast?q=tehran&appid=${API_KEY}&units=metric`;
       break;
   }
 
@@ -32,7 +32,7 @@ const getWeatherData = async (type, data) => {
     if (+json.code === 200) {
       return json;
     } else {
-      showModal(json.message);
+      console.log(json.message);
     }
     return json;
   } catch (error) {
